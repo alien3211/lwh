@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+    <h2>CPM COST</h2>
+    <form action="/" method="post" class="post-form">
+        {% csrf_token %}
+        {% for field in form %}
+        <fieldset class="control-group">
+            <label class="control-label" for="id_{{ field.name }}">{{ field.label }}</label>
+            <div class="controls">
+                {{ field }}
+                <p class="help-text">{{ field.help_text }} </p>
+            </div>
+        </fieldset>
+        {% endfor %}
+        <button type="submit" class="save btn btn-default">Submit</button>
+    </form>
+{% endblock %}
