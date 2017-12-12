@@ -1,8 +1,8 @@
-# from django.http import HttpResponseRedirect
-# from django.shortcuts import render
-# from django.urls import reverse
-#
-# from .forms import CmpForm
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse
+
+from .forms import CmpForm
 
 class Task(object):
     def __init__(self, start, end, tn, tgr, Kn, Kgr):
