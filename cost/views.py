@@ -127,13 +127,18 @@ def index(request):
 
             save = 0
             critical_paths = []
-            wynik = reduce(list_tasks, critical_paths)
+            wynik = reduce(list_tasks)#, critical_paths)
             for task in wynik:
                 save += task.saved
 
+            critical_paths = find_critical_paths(list_tasks)
+            print("*********************")
+            print(list_tasks)
+            print(critical_paths)
+
             request.session['_data'] = {
                 'save': save,
-                'critical_paths': [list(map(vars, x[0])) for x in critical_paths], # get all vars from task object [[[],[]], [[],[]]]
+                'critical_paths': [list(map(vars, x)) for x in critical_paths], # get all vars from task object [[[],[]], [[],[]]]
                 'keys': ['start', 'end', 'tn', 'tgr', 'Kn', 'Kgr', 'gradient']
             }
             return HttpResponseRedirect(reverse('result'))
@@ -147,11 +152,11 @@ def index(request):
 
     return render(request, 'cost/cmp_cost.html', context)
 
-def reduce(listt, critical_paths):
+def reduce(listt):#, critical_paths):
     # print("Enter!")
     nodes = []
     crit_paths = find_critical_paths(listt)
-    critical_paths.append(crit_paths)
+    #critical_paths.append(crit_paths)
     print(crit_paths)
     # print(crit_paths)
     # print("------------------")
@@ -166,7 +171,7 @@ def reduce(listt, critical_paths):
             task.reduced = True
             task.saved = (task.tn - task.tgr) * task.gradient
             task.tn = task.tgr
-            reduce(listt, critical_paths)
+            reduce(listt)#, critical_paths)
             break
 
     return listt
