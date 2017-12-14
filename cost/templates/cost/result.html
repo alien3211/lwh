@@ -1,9 +1,31 @@
 {% extends "base.html" %}
+{% load new_filters %}
 
 {% block title %}{% endblock %}
-
+templatetags
 {% block content %}
-    {{ data }}
-{#  ToDo:  tu masz dodac odczyt danych czyli pewnie wypisanie w sensowny sposob wyniku#}
+    <p><h2>Result: {{ data.save }}</h2></p>
+    {% for critical_path in data.critical_paths %}
+        <p><h3>Critical Path: {{ forloop.counter }}</h3></p>
+        <table class="table table-bordered">
+        <thead>
+          <tr>
+            {% for key in data.keys %}
+                <th>{{ key }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+            {% for task in critical_path %}
+                <tr>
+                        {% for key in data.keys %}
+                            <td>{{ task|get_item:key }}</td>
+                        {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    {% endfor %}
+
     <p><a href="{% url 'index' %}">Back</a></p>
 {% endblock %}

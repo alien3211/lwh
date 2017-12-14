@@ -1,20 +1,81 @@
 {% extends "base.html" %}
-
-{% block title %}{% endblock %}
-
 {% block content %}
-    <h2>CPM COST</h2>
-    <form action="/" method="post" class="post-form">
-        {% csrf_token %}
-        {% for field in form %}
-        <fieldset class="control-group">
-            <label class="control-label" for="id_{{ field.name }}">{{ field.label }}</label>
-            <div class="controls">
-                {{ field }}
-                <p class="help-text">{{ field.help_text }} </p>
-            </div>
-        </fieldset>
+
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+
+    {{ link_formset.management_form }}
+    {% for link_form in link_formset %}
+        <div class="link-formset">
+            <span>row: </span>
+            {{ link_form.start }}
+            {% if link_form.start.errors %}
+                {% for error in link_form.start.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ link_form.end }}
+            {% if link_form.end.errors %}
+                {% for error in link_form.end.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ link_form.tn }}
+            {% if link_form.tn.errors %}
+                {% for error in link_form.tn.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ link_form.tgr }}
+            {% if link_form.tgr.errors %}
+                {% for error in link_form.tgr.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ link_form.Kn }}
+            {% if link_form.Kn.errors %}
+                {% for error in link_form.Kn.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+            {{ link_form.Kgr }}
+            {% if link_form.Kgr.errors %}
+                {% for error in link_form.Kgr.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+
+
+        </div>
+    {% endfor %}
+
+    {% if link_formset.non_form_errors %}
+        {% for error in link_formset.non_form_errors %}
+            {{ error|escape }}
         {% endfor %}
-        <button type="submit" class="save btn btn-default">Submit</button>
-    </form>
+    {% endif %}
+
+    <p><input type="submit" value="Update Profile" class="button"/></p>
+</form>
+
+<!-- Include formset plugin - including jQuery dependency -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.js"></script>
+<script>
+    $('.link-formset').formset({
+        addText: 'add link',
+        deleteText: 'remove'
+    });
+</script>
 {% endblock %}
