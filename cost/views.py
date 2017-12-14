@@ -55,11 +55,12 @@ def result(request):
     save = 0
 
     # wywolanie funkcji
-    reduce(lista)
-    for task in lista:
+    # *wynik*: czynnosci po redukcji
+    wynik = reduce(lista)
+    for task in wynik:
         save += task.saved
-    # output - kosztu przyspieszenia
-    print save
+    # *save*: laczne koszty przyspieszenia
+    print(save)
 
     return render(request, 'cost/result.html',
                   {'data': data}
@@ -86,16 +87,18 @@ def find_critical_paths(tasks):
                     paths.append([taskk])
                 brothers.append(taskk)
                 next
-    	    if taskk.end == path[-1].start:
-           	    path.append(taskk)
-               
-    miin = 9999999999999
+            if taskk.end == path[-1].start:
+                path.append(taskk)
+    # print("paths: ", paths)
+    miin = 0
     for path in paths:
+        # print("path: ", path)
         time = 0
         for task in path:
             time += task.tn
-        if time < miin:
+        if time > miin:
             critical_paths = [path]
+            miin = time
         elif time == miin:
             critical_paths.append(path)
 
@@ -103,19 +106,24 @@ def find_critical_paths(tasks):
 
 
 def reduce(listt):
+    # print("Enter!")
     nodes = []
     crit_paths = find_critical_paths(listt)
-    print crit_paths
+    # print(listt)
+    # print(crit_paths)
+    # print("------------------")
     for path in crit_paths:
         for task in path:
             nodes.append(task)
 
     tasks_by_gradient = sorted(nodes, key=lambda x: x.gradient, reverse=False)
     for task in tasks_by_gradient:
+        # print(task.gradient, task.reduced)
         if task.gradient != 0 and task.reduced is False:
             task.reduced = True
             task.saved = (task.tn - task.tgr) * task.gradient
             task.tn = task.tgr
             reduce(listt)
+            break
 
     return listt
